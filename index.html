@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#164bb5">
+  <meta name="description" content="Peta rute dari Universitas Logistik dan Bisnis Internasional menuju Paris Van Java Mall, Bandung.">
+  <title>ULBI → PVJ · Peta rute</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <script type="module" src="./assets/js/main.js"></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="./" aria-label="SIG ULBI–PVJ, halaman utama"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 4-6 2v15l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v15M15 6v15"/></svg></span><span class="brand-copy"><strong>SIG ULBI–PVJ</strong><span>ULBI menuju Paris Van Java</span></span></a>
+    <span class="city"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></svg><span>Bandung<small>Jawa Barat</small></span></span>
+  </header>
+  <main class="workspace">
+    <section class="map-panel" aria-label="Peta rute ULBI menuju Paris Van Java">
+      <div id="map" class="map" aria-label="Peta interaktif. Geser untuk menjelajah dan gunakan tombol untuk memperbesar."></div>
+      <div class="map-tools" role="group" aria-label="Kontrol peta">
+        <button id="zoom-in" aria-label="Perbesar peta" title="Perbesar peta" disabled>+</button>
+        <button id="zoom-out" aria-label="Perkecil peta" title="Perkecil peta" disabled>−</button>
+      </div>
+      <nav class="floating-nav" aria-label="Navigasi rute">
+        <div class="route-summary"><div><span class="summary-label">Rute perjalanan</span><h1>ULBI <span aria-hidden="true">→</span> PVJ</h1></div><strong id="distance" aria-label="Panjang rute">—</strong></div>
+        <div class="nav-actions">
+          <button id="fit" class="nav-item is-active" aria-label="Lihat seluruh rute" aria-pressed="true" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 4-6 2v15l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v15M15 6v15"/></svg><span>Rute</span></button>
+          <button id="origin" class="nav-item" aria-label="Fokus ke Universitas Logistik dan Bisnis Internasional" aria-pressed="false" disabled><span class="stop-symbol origin" aria-hidden="true">A</span><span>ULBI</span></button>
+          <button id="destination" class="nav-item" aria-label="Fokus ke Paris Van Java Mall" aria-pressed="false" disabled><span class="stop-symbol destination" aria-hidden="true">B</span><span>PVJ</span></button>
+          <button id="legend-toggle" class="nav-item" aria-expanded="false" aria-controls="legend-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h12M9 12h12M9 19h12"/><circle cx="4" cy="5" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="19" r="1"/></svg><span>Legenda</span></button>
+          <a class="nav-item" href="./assets/geojson/ULBI%20PVJ.geojson" download="ULBI PVJ.geojson" aria-label="Unduh data rute GeoJSON"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>Unduh</span></a>
+        </div>
+        <section id="legend-panel" class="legend-panel" aria-labelledby="legend-title" hidden>
+          <h2 id="legend-title">Legenda peta</h2>
+          <ul>
+            <li><span class="legend-line" aria-hidden="true"></span><div><strong>Jalur rute</strong><span>Jalan dari ULBI ke Paris Van Java</span></div></li>
+            <li><span class="legend-dot origin-dot" aria-hidden="true"></span><div><strong>ULBI · Titik awal</strong><span>Universitas Logistik dan Bisnis Internasional</span></div></li>
+            <li><span class="legend-dot destination-dot" aria-hidden="true"></span><div><strong>PVJ · Titik tujuan</strong><span>Paris Van Java Mall</span></div></li>
+          </ul>
+        </section>
+      </nav>
+      <div id="map-message" class="map-message"><p id="status" role="status" aria-live="polite">Memuat peta dan rute…</p><button id="retry" hidden>Coba lagi</button></div>
+      <noscript><p class="no-script">Aktifkan JavaScript untuk membuka peta. Data rute tetap dapat diunduh.</p></noscript>
+    </section>
+  </main>
+</body>
+</html>
