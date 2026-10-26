@@ -1,39 +1,4 @@
-export const datasetURL = new URL("../geojson/ULBI PVJ.geojson", import.meta.url);
-
-// Validasi data asli sebelum diteruskan ke CrootJS.
-export async function loadRoute() {
-  const response = await fetch(datasetURL);
-  if (!response.ok) throw new Error("Dataset gagal dimuat: HTTP " + response.status);
-  const original = await response.json();
-  if (original?.type !== "FeatureCollection" || !Array.isArray(original.features)) {
-    throw new Error("Dataset harus berupa FeatureCollection.");
-  }
-  const lines = original.features.filter(f => f.geometry?.type === "LineString");
-  if (!lines.length) throw new Error("Dataset tidak memiliki LineString.");
-  for (const line of lines) {
-    const positions = line.geometry.coordinates;
-    if (!Array.isArray(positions) || positions.length < 2 ||
-        !positions.every(p => Array.isArray(p) && p.length >= 2 &&
-          p.every(Number.isFinite) && Math.abs(p[0]) <= 180 && Math.abs(p[1]) <= 90)) {
-      throw new Error("Koordinat LineString tidak valid.");
-    }
-  }
-  return original;
-}
-
-// Panjang geodesik sepanjang koordinat rute, bukan jarak lurus antar tujuan.
-export function routeLength(positions) {
-  const radians = value => value * Math.PI / 180;
-  let metres = 0;
-  for (let i = 1; i < positions.length; i++) {
-    const [lng1, lat1] = positions[i - 1];
-    const [lng2, lat2] = positions[i];
-    const a = Math.sin(radians(lat2 - lat1) / 2) ** 2 +
-      Math.cos(radians(lat1)) * Math.cos(radians(lat2)) * Math.sin(radians(lng2 - lng1) / 2) ** 2;
-    metres += 6371008.8 * 2 * Math.asin(Math.sqrt(Math.min(1, a)));
-  }
-  return metres;
-}
+import { loadRoute, routeLength } from "./route.mjs";
 
 const byId = id => document.getElementById(id);
 const controls = ["fit", "origin", "destination", "zoom-in", "zoom-out"];
@@ -54,11 +19,12 @@ function fitRoute() {
   // Kelas CSS menyisakan ruang untuk navigasi.
   map.classList.add("is-fitting");
   const visibleHeight = map.clientHeight;
+  const topInset = document.querySelector(".header").getBoundingClientRect().bottom + 12;
   mapAPI.fitMap("map", route, 32);
   const view = mapAPI.getMapView("map");
   map.classList.remove("is-fitting");
   mapAPI.setMapView("map", view.center, view.zoom);
-  const center = mapAPI.pointToPosition("map", [map.clientWidth / 2, map.clientHeight - visibleHeight / 2]);
+  const center = mapAPI.pointToPosition("map", [map.clientWidth / 2, map.clientHeight - topInset - visibleHeight / 2]);
   mapAPI.setMapView("map", center, view.zoom);
   setActive("fit");
 }
@@ -89,12 +55,12 @@ async function initialize() {
     end = coordinates[coordinates.length - 1];
     mapAPI.createMap("map", { center: start, zoom: 14, zoomControl: false, scrollZoom: true });
     mapAPI.addGeoJSON("map", route, {
-      style: { stroke: "#164bb5", strokeWidth: 5, strokeOpacity: 1 },
+      style: { stroke: "#087f8c", strokeWidth: 5, strokeOpacity: 1 },
       popup: () => "Rute ULBI → Paris Van Java"
     });
     for (const [coordinates, label, fill] of [
-      [start, "ULBI · Titik awal rute", "#164bb5"],
-      [end, "Paris Van Java · Titik akhir rute", "#187563"]
+      [start, "ULBI · Titik awal rute", "#087f8c"],
+      [end, "Paris Van Java · Titik akhir rute", "#a35d25"]
     ]) {
       mapAPI.addGeoJSON("map", { type: "Feature", properties: {}, geometry: { type: "Point", coordinates } }, {
         style: { fill, fillOpacity: 1, stroke: "#ffffff", strokeWidth: 3, radius: 9 },
@@ -135,4 +101,4 @@ document.addEventListener("keydown", event => {
   }
 });
 byId("retry").addEventListener("click", () => window.location.reload());
-initialize();
+await initialize();
